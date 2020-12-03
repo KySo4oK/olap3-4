@@ -17,5 +17,7 @@ public class App {
         DataMerger merger = new DataMerger();
         Map<String, List<String>> imdbMap = merger.convertDataToMap(imdb, 1);
         Map<String, List<String>> kinopoiskMap = merger.convertDataToMap(imdb, 1);
+
+        List<List<String>> result = merger.mergeTwoMaps(imdbMap, kinopoiskMap);
     }
 }
