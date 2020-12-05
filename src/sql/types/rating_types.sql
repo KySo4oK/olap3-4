@@ -1,7 +1,6 @@
-CREATE TABLE public.ratings
+CREATE TABLE public.rating_types
 (
     rating_id text NOT NULL,
-    imdb_rating text,
-    kinopoisk_rating text,
+    rating_type text,
     CONSTRAINT ratings_pkey PRIMARY KEY (rating_id)
 )
