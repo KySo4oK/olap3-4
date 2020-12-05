@@ -22,6 +22,7 @@ public class DataMerger {
                 if (secondKey.equals(firstKey)) {
                     List<String> line = firstMap.get(firstKey);
                     line.add(0, firstKey);
+                    line.add(secondKey);
                     line.addAll(secondMap.get(secondKey));
                     result.add(line);
                 }

@@ -19,6 +19,5 @@ CREATE TABLE public.combined_movies
     genre text COLLATE pg_catalog."default",
     metadate text COLLATE pg_catalog."default",
     summarytext text COLLATE pg_catalog."default",
-    creditsinfo text COLLATE pg_catalog."default",
     CONSTRAINT combined_movies_pkey PRIMARY KEY (rating)
 )

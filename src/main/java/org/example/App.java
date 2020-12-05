@@ -18,7 +18,7 @@ public class App {
         Map<String, List<String>> imdbMap = merger.convertDataToMap(imdb, 1);
         Map<String, List<String>> kinopoiskMap = merger.convertDataToMap(kinopoisk, 1);
 
-        List<List<String>> result = merger.mergeTwoMaps(imdbMap, kinopoiskMap);
+        List<List<String>> result = merger.mergeTwoMaps(kinopoiskMap, imdbMap);
         DBWriter dbWriter = new DBWriter();
         dbWriter.write(result);
     }

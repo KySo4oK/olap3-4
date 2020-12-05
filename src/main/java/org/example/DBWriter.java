@@ -7,7 +7,7 @@ public class DBWriter {
 
     public static final String query = "insert into combined_movies (rating, movie, year_eng, country, rating_eng, overview, director, screenwriter, actors,\n" +
             "                             url_logo, rank, title, year_rus, linkmeta, rating_rus, duration, genre, metadate,\n" +
-            "                             summarytext, creditsinfo)\n" +
+            "                             summarytext)\n" +
             "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     public void write(List<List<String>> result) {
@@ -19,7 +19,7 @@ public class DBWriter {
                 for (List<String> line : result) {
                     for (int i = 0, oneLineSize = line.size(); i < oneLineSize; i++) {
                         String singleData = line.get(i);
-                        statement.setString(i, singleData);
+                        statement.setString(i+1, singleData);
                         statement.addBatch();
                     }
                     statement.executeBatch();
