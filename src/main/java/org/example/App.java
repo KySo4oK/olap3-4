@@ -20,6 +20,6 @@ public class App {
 
         List<List<String>> result = merger.mergeTwoMaps(kinopoiskMap, imdbMap);
         DBWriter dbWriter = new DBWriter();
-        dbWriter.write(result);
+        dbWriter.writeDirtyData(result);
     }
 }

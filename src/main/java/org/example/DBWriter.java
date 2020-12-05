@@ -10,7 +10,7 @@ public class DBWriter {
             "                             summarytext)\n" +
             "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-    public void write(List<List<String>> result) {
+    public void writeDirtyData(List<List<String>> result) {
         try (Connection connection = DriverManager
                 .getConnection("jdbc:postgresql://localhost:5432/postgres",
                         "postgres", "root")) {
