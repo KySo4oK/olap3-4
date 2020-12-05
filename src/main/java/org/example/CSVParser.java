@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class CSVParser {
-    public List<List<String>> loadFromFile(String fileName) {
+    public List<List<String>> loadFromFile(String fileName, String regex) {
         try (FileReader reader = new FileReader(fileName)) {
             Scanner scan = new Scanner(reader);
             ArrayList<String> lines = new ArrayList<>();
@@ -18,7 +18,9 @@ public class CSVParser {
                 lines.add(scan.nextLine());
             }
             return lines.stream()
-                    .map(line -> Arrays.asList(line.split(",")))
+                    .map(line -> {
+                        return Arrays.asList(line.split(regex));
+                    })
                     .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();

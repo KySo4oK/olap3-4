@@ -8,8 +8,8 @@ public class App {
     public static void main(String[] args) {
         CSVParser parser = new CSVParser();
 
-        List<List<String>> imdb = parser.loadFromFile("src/csv-tables/imdb.csv");
-        List<List<String>> kinopoisk = parser.loadFromFile("src/csv-tables/kinopoisk.csv");
+        List<List<String>> imdb = parser.loadFromFile("src/csv-tables/imdb.csv", "\\\\s+,");
+        List<List<String>> kinopoisk = parser.loadFromFile("src/csv-tables/kinopoisk.csv", ",");
 
         List<String> imdbHeader = imdb.remove(0);
         List<String> kinopoiskHeader = kinopoisk.remove(0);

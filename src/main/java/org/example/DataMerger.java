@@ -6,6 +6,7 @@ public class DataMerger {
     public Map<String, List<String>> convertDataToMap(List<List<String>> dataLines, int positionForKey) {
         HashMap<String, List<String>> map = new HashMap<>();
         for (List<String> dataLine : dataLines) {
+            dataLine = new ArrayList<>(dataLine);
             map.put(dataLine.remove(positionForKey), dataLine);
         }
         return map;
