@@ -5,8 +5,8 @@ import java.util.List;
 
 public class DBWriter {
 
-    public static final String query = "insert into combined_movies (rating, movie, year_eng, country, rating_eng, overview, director, screenwriter, actors,\n" +
-            "                             url_logo, rank, title, year_rus, linkmeta, rating_rus, duration, genre, metadate,\n" +
+    public static final String query = "insert into combined_movies (rating, movie, year_rus, country, rating_rus, overview, director, screenwriter, actors,\n" +
+            "                             url_logo, rank, title, year_eng, linkmeta, rating_eng, duration, genre, metadate,\n" +
             "                             summarytext)\n" +
             "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -17,13 +17,15 @@ public class DBWriter {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 connection.setAutoCommit(false);
                 for (List<String> line : result) {
-                    for (int i = 0, oneLineSize = line.size(); i < oneLineSize; i++) {
+                    int oneLineSize = line.size();
+                    for (int i = 0; i < oneLineSize; i++) {
                         String singleData = line.get(i);
-                        statement.setString(i+1, singleData);
-                        statement.addBatch();
+                        statement.setString(i + 1, singleData);
                     }
-                    statement.executeBatch();
+                    statement.addBatch();
                 }
+                statement.executeBatch();
+                connection.commit();
             }
         } catch (SQLException e) {
             System.out.println("Connection failure.");
