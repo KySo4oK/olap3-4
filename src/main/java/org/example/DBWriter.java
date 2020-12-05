@@ -14,6 +14,12 @@ public class DBWriter {
             "                             summarytext)\n" +
             "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     public static final String CONNECTION_FAILURE = "Connection failure.";
+    private final String description_query = "insert into description_types(description_id, description_type)\n" +
+            "values (?, ?);";
+    private String metadata_query = "insert into metadata_types(metadata_id, metadata_type)\n" +
+            "values (?, ?);";
+    private String rating_query = "insert into rating_types(rating_id, rating_type)\n" +
+            "values (?, ?);";
 
     public void writeDirtyData(List<List<String>> result) {
         try (Connection connection = DriverManager
@@ -52,7 +58,7 @@ public class DBWriter {
                 connection.setAutoCommit(false);
                 for (RatingType ratingType : RatingType.values()) {
                     statement.setString(1, String.valueOf(ratingType.ordinal()));
-                    statement.setString(1, ratingType.toString());
+                    statement.setString(2, ratingType.toString());
                     statement.addBatch();
                 }
                 statement.executeBatch();
@@ -72,7 +78,7 @@ public class DBWriter {
                 connection.setAutoCommit(false);
                 for (DescriptionType descriptionType : DescriptionType.values()) {
                     statement.setString(1, String.valueOf(descriptionType.ordinal()));
-                    statement.setString(1, descriptionType.toString());
+                    statement.setString(2, descriptionType.toString());
                     statement.addBatch();
                 }
                 statement.executeBatch();
@@ -92,7 +98,7 @@ public class DBWriter {
                 connection.setAutoCommit(false);
                 for (MetadataType metadataType : MetadataType.values()) {
                     statement.setString(1, String.valueOf(metadataType.ordinal()));
-                    statement.setString(1, metadataType.toString());
+                    statement.setString(2, metadataType.toString());
                     statement.addBatch();
                 }
                 statement.executeBatch();
