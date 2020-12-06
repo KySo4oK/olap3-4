@@ -31,11 +31,11 @@ public class MovieMapper {
     private List<Metadata> getMetadata(ResultSet rs) throws SQLException {
         Metadata metadataRus = Metadata.MetadataBuilder.aMetadata()
                 .metadataName(rs.getString("url_logo"))
-                .metadataType(MetadataType.RUS_METADATA)
+                .metadataType(MetadataType.URL_LOGO)
                 .build();
         Metadata metadataEng = Metadata.MetadataBuilder.aMetadata()
                 .metadataName(rs.getString("linkmeta"))
-                .metadataType(MetadataType.ENG_METADATA)
+                .metadataType(MetadataType.LINK_META)
                 .build();
         return List.of(metadataEng, metadataRus);
     }
@@ -43,11 +43,11 @@ public class MovieMapper {
     private List<Rating> getRatings(ResultSet rs) throws SQLException {
         Rating rating = Rating.RatingBuilder.aRating()
                 .ratingName(rs.getString("rating"))
-                .ratingType(RatingType.ENG_RATING)
+                .ratingType(RatingType.RATING)
                 .build();
         Rating rank = Rating.RatingBuilder.aRating()
                 .ratingName(rs.getString("rank"))
-                .ratingType(RatingType.RUS_RATING)
+                .ratingType(RatingType.RANK)
                 .build();
         return List.of(rank, rating);
     }
@@ -55,11 +55,11 @@ public class MovieMapper {
     private List<Description> getDescriptions(ResultSet rs) throws SQLException {
         Description overview = Description.DescriptionBuilder.aDescription()
                 .descriptionName(rs.getString("overview"))
-                .descriptionType(DescriptionType.ENG_DESC)
+                .descriptionType(DescriptionType.OVERVIEW)
                 .build();
         Description summary = Description.DescriptionBuilder.aDescription()
                 .descriptionName(rs.getString("summarytext"))
-                .descriptionType(DescriptionType.RUS_DESC)
+                .descriptionType(DescriptionType.SUMMARY_TEXT)
                 .build();
         return List.of(overview, summary);
     }

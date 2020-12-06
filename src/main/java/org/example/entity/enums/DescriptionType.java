@@ -1,5 +1,5 @@
 package org.example.entity.enums;
 
 public enum DescriptionType {
-    RUS_DESC, ENG_DESC
+    SUMMARY_TEXT, OVERVIEW
 }
