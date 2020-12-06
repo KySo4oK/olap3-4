@@ -22,5 +22,6 @@ public class App {
         DBWriter dbWriter = new DBWriter();
 //        dbWriter.writeDirtyData(result);
 //        dbWriter.writeEnums();
+        System.out.println(dbWriter.readDirtyDataFromDB());
     }
 }

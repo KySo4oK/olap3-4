@@ -1,7 +1,6 @@
 package org.example.entity;
 
-import org.example.entity.enums.RatingType;
-
+import java.util.List;
 import java.util.Objects;
 
 public class Movie {
@@ -10,31 +9,12 @@ public class Movie {
     private String director;
     private String screenwriter;
     private String actors;
-    private String urlLogo;
     private String title;
-    private String linkMeta;
     private String genre;
-    private Description description;
-    private Metadata metadata;
-    private RatingType rating;
+    private List<Description> description;
+    private List<Metadata> metadata;
+    private List<Rating> rating;
 
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "year='" + year + '\'' +
-                ", country='" + country + '\'' +
-                ", director='" + director + '\'' +
-                ", screenwriter='" + screenwriter + '\'' +
-                ", actors='" + actors + '\'' +
-                ", urlLogo='" + urlLogo + '\'' +
-                ", title='" + title + '\'' +
-                ", linkMeta='" + linkMeta + '\'' +
-                ", genre='" + genre + '\'' +
-                ", description=" + description +
-                ", metadata=" + metadata +
-                ", rating=" + rating +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -89,28 +69,12 @@ public class Movie {
         this.actors = actors;
     }
 
-    public String getUrlLogo() {
-        return urlLogo;
-    }
-
-    public void setUrlLogo(String urlLogo) {
-        this.urlLogo = urlLogo;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getLinkMeta() {
-        return linkMeta;
-    }
-
-    public void setLinkMeta(String linkMeta) {
-        this.linkMeta = linkMeta;
     }
 
     public String getGenre() {
@@ -121,28 +85,44 @@ public class Movie {
         this.genre = genre;
     }
 
-    public Description getDescription() {
+    public List<Description> getDescription() {
         return description;
     }
 
-    public void setDescription(Description description) {
+    public void setDescription(List<Description> description) {
         this.description = description;
     }
 
-    public Metadata getMetadata() {
+    public List<Metadata> getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(Metadata metadata) {
+    public void setMetadata(List<Metadata> metadata) {
         this.metadata = metadata;
     }
 
-    public RatingType getRating() {
+    public List<Rating> getRating() {
         return rating;
     }
 
-    public void setRating(RatingType rating) {
+    public void setRating(List<Rating> rating) {
         this.rating = rating;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "year='" + year + '\'' +
+                ", country='" + country + '\'' +
+                ", director='" + director + '\'' +
+                ", screenwriter='" + screenwriter + '\'' +
+                ", actors='" + actors + '\'' +
+                ", title='" + title + '\'' +
+                ", genre='" + genre + '\'' +
+                ", description=" + description +
+                ", metadata=" + metadata +
+                ", rating=" + rating +
+                '}';
     }
 
     public static final class MovieBuilder {
@@ -151,13 +131,11 @@ public class Movie {
         private String director;
         private String screenwriter;
         private String actors;
-        private String urlLogo;
         private String title;
-        private String linkMeta;
         private String genre;
-        private Description description;
-        private Metadata metadata;
-        private RatingType rating;
+        private List<Description> description;
+        private List<Metadata> metadata;
+        private List<Rating> rating;
 
         private MovieBuilder() {
         }
@@ -191,18 +169,8 @@ public class Movie {
             return this;
         }
 
-        public MovieBuilder urlLogo(String urlLogo) {
-            this.urlLogo = urlLogo;
-            return this;
-        }
-
         public MovieBuilder title(String title) {
             this.title = title;
-            return this;
-        }
-
-        public MovieBuilder linkMeta(String linkMeta) {
-            this.linkMeta = linkMeta;
             return this;
         }
 
@@ -211,17 +179,17 @@ public class Movie {
             return this;
         }
 
-        public MovieBuilder description(Description description) {
+        public MovieBuilder description(List<Description> description) {
             this.description = description;
             return this;
         }
 
-        public MovieBuilder metadata(Metadata metadata) {
+        public MovieBuilder metadata(List<Metadata> metadata) {
             this.metadata = metadata;
             return this;
         }
 
-        public MovieBuilder rating(RatingType rating) {
+        public MovieBuilder rating(List<Rating> rating) {
             this.rating = rating;
             return this;
         }
@@ -233,9 +201,7 @@ public class Movie {
             movie.setDirector(director);
             movie.setScreenwriter(screenwriter);
             movie.setActors(actors);
-            movie.setUrlLogo(urlLogo);
             movie.setTitle(title);
-            movie.setLinkMeta(linkMeta);
             movie.setGenre(genre);
             movie.setDescription(description);
             movie.setMetadata(metadata);
