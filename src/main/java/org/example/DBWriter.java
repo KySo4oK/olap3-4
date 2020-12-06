@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.entity.Movie;
 import org.example.entity.enums.DescriptionType;
 import org.example.entity.enums.MetadataType;
 import org.example.entity.enums.RatingType;
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class DBWriter {
 
-    public static final String query = "insert into combined_movies (rating, movie, year_rus, country, rating_rus, overview, director, screenwriter, actors,\n" +
-            "                             url_logo, rank, title, year_eng, linkmeta, rating_eng, duration, genre, metadate,\n" +
+    public static final String query = "insert into combined_movies (movie, rating, year_rus, country, rating_rus, overview, director, screenwriter, actors,\n" +
+            "                             url_logo, title, rank, year_eng, linkmeta, rating_eng, duration, genre, metadate,\n" +
             "                             summarytext)\n" +
             "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     public static final String CONNECTION_FAILURE = "Connection failure.";
@@ -51,9 +52,7 @@ public class DBWriter {
     }
 
     private void writeRatingTypes() {
-        try (Connection connection = DriverManager
-                .getConnection("jdbc:postgresql://localhost:5432/postgres",
-                        "postgres", "root")) {
+        try (Connection connection = getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(rating_query)) {
                 connection.setAutoCommit(false);
                 for (RatingType ratingType : RatingType.values()) {
@@ -71,9 +70,7 @@ public class DBWriter {
     }
 
     private void writeDescriptionTypes() {
-        try (Connection connection = DriverManager
-                .getConnection("jdbc:postgresql://localhost:5432/postgres",
-                        "postgres", "root")) {
+        try (Connection connection = getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(description_query)) {
                 connection.setAutoCommit(false);
                 for (DescriptionType descriptionType : DescriptionType.values()) {
@@ -91,9 +88,7 @@ public class DBWriter {
     }
 
     private void writeMetadataTypes() {
-        try (Connection connection = DriverManager
-                .getConnection("jdbc:postgresql://localhost:5432/postgres",
-                        "postgres", "root")) {
+        try (Connection connection = getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(metadata_query)) {
                 connection.setAutoCommit(false);
                 for (MetadataType metadataType : MetadataType.values()) {
@@ -108,5 +103,25 @@ public class DBWriter {
             System.out.println(CONNECTION_FAILURE);
             e.printStackTrace();
         }
+    }
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager
+                .getConnection("jdbc:postgresql://localhost:5432/postgres",
+                        "postgres", "root");
+    }
+
+    public List<Movie> readDirtyDataFromDB() {
+        List<Movie> movies = new ArrayList<>();
+        try (Statement statement = getConnection().createStatement()) {
+            ResultSet resultSet = statement.executeQuery(FIND_ALL_DIRTY_DATA_QUERY);
+            while (resultSet.next()) {
+                movies.add(movieMapper.extractFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(CONNECTION_FAILURE);
+            e.printStackTrace();
+        }
+        return movies;
     }
 }
