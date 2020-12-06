@@ -1,11 +1,14 @@
 package org.example;
 
+import org.example.entity.Movie;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 //        CSVParser parser = new CSVParser();
 //
 //        List<List<String>> imdb = parser.loadFromFile("src/csv-tables/imdb.csv", ";");
@@ -22,6 +25,8 @@ public class App {
         DBWriter dbWriter = new DBWriter();
 //        dbWriter.writeDirtyData(result);
 //        dbWriter.writeEnums();
-        System.out.println(dbWriter.readDirtyDataFromDB());
+        List<Movie> movies = dbWriter.readDirtyDataFromDB();
+        System.out.println(movies);
+        dbWriter.writeMovies(movies);
     }
 }

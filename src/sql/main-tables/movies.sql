@@ -5,9 +5,7 @@ CREATE TABLE public.movies
     country text COLLATE pg_catalog."default",
     director text COLLATE pg_catalog."default",
     actors text COLLATE pg_catalog."default",
-    url_logo text COLLATE pg_catalog."default",
     genre text COLLATE pg_catalog."default",
     screenwriter text COLLATE pg_catalog."default",
-    linkmeta text COLLATE pg_catalog."default",
     CONSTRAINT movies_pkey PRIMARY KEY (title)
 )

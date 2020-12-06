@@ -1,6 +1,9 @@
 package org.example;
 
+import org.example.entity.Description;
+import org.example.entity.Metadata;
 import org.example.entity.Movie;
+import org.example.entity.Rating;
 import org.example.entity.enums.DescriptionType;
 import org.example.entity.enums.MetadataType;
 import org.example.entity.enums.RatingType;
@@ -11,16 +14,16 @@ import java.util.List;
 
 public class DBWriter {
 
-    public static final String query = "insert into combined_movies (movie, rating, year_rus, country, rating_rus, overview, director, screenwriter, actors,\n" +
+    public static final String INSERT_COMBINED_MOVIES = "insert into combined_movies (movie, rating, year_rus, country, rating_rus, overview, director, screenwriter, actors,\n" +
             "                             url_logo, title, rank, year_eng, linkmeta, rating_eng, duration, genre, metadate,\n" +
             "                             summarytext)\n" +
             "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     public static final String CONNECTION_FAILURE = "Connection failure.";
-    private static final String description_query = "insert into description_types(description_id, description_type)\n" +
+    private static final String DESCRIPTION_QUERY = "insert into description_types(description_id, description_type)\n" +
             "values (?, ?);";
-    private static final String metadata_query = "insert into metadata_types(metadata_id, metadata_type)\n" +
+    private static final String METADATA_QUERY = "insert into metadata_types(metadata_id, metadata_type)\n" +
             "values (?, ?);";
-    private static final String rating_query = "insert into rating_types(rating_id, rating_type)\n" +
+    private static final String RATING_QUERY = "insert into rating_types(rating_id, rating_type)\n" +
             "values (?, ?);";
     private static final String FIND_ALL_DIRTY_DATA_QUERY = "select rating as \"rating\",\n" +
             "       movie as \"movie\",\n" +
@@ -42,11 +45,19 @@ public class DBWriter {
             "       metadate as \"metadate\",\n" +
             "       summarytext as \"summarytext\"\n" +
             "from combined_movies;";
+    private static final String INSERT_RATING_RELATION = "insert into movies2ratings(movie_title, rating_id, rating)\n" +
+            "VALUES (?, ?, ?)";
+    private static final String INSERT_DESCRIPTION_RELATION = "insert into movies2descriptions (movie_title, description_id, description)\n" +
+            "values (?, ?, ?)";
     private final MovieMapper movieMapper = new MovieMapper();
+    private static final String INSERT_MOVIES = "insert into movies(title, year, country, director, actors, genre, screenwriter)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_METADATA_RELATION = "insert into movies2metadata(movie_title, metadata_id, metadata)\n" +
+            "VALUES (?, ?, ?)";
 
     public void writeDirtyData(List<List<String>> result) {
         try (Connection connection = getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
+            try (PreparedStatement statement = connection.prepareStatement(INSERT_COMBINED_MOVIES)) {
                 connection.setAutoCommit(false);
                 for (List<String> line : result) {
                     int oneLineSize = line.size();
@@ -73,7 +84,7 @@ public class DBWriter {
 
     private void writeRatingTypes() {
         try (Connection connection = getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(rating_query)) {
+            try (PreparedStatement statement = connection.prepareStatement(RATING_QUERY)) {
                 connection.setAutoCommit(false);
                 for (RatingType ratingType : RatingType.values()) {
                     statement.setString(1, String.valueOf(ratingType.ordinal()));
@@ -91,7 +102,7 @@ public class DBWriter {
 
     private void writeDescriptionTypes() {
         try (Connection connection = getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(description_query)) {
+            try (PreparedStatement statement = connection.prepareStatement(DESCRIPTION_QUERY)) {
                 connection.setAutoCommit(false);
                 for (DescriptionType descriptionType : DescriptionType.values()) {
                     statement.setString(1, String.valueOf(descriptionType.ordinal()));
@@ -109,7 +120,7 @@ public class DBWriter {
 
     private void writeMetadataTypes() {
         try (Connection connection = getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(metadata_query)) {
+            try (PreparedStatement statement = connection.prepareStatement(METADATA_QUERY)) {
                 connection.setAutoCommit(false);
                 for (MetadataType metadataType : MetadataType.values()) {
                     statement.setString(1, String.valueOf(metadataType.ordinal()));
@@ -143,5 +154,52 @@ public class DBWriter {
             e.printStackTrace();
         }
         return movies;
+    }
+
+    public void writeMovies(List<Movie> movies) throws SQLException {
+        Connection connection = getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_MOVIES);
+             PreparedStatement statementForMetadata = connection.prepareStatement(INSERT_METADATA_RELATION);
+             PreparedStatement statementForRating = connection.prepareStatement(INSERT_RATING_RELATION);
+             PreparedStatement statementForDescription = connection.prepareStatement(INSERT_DESCRIPTION_RELATION);
+        ) {
+            connection.setAutoCommit(false);
+            for (Movie movie : movies) {
+                statement.setString(1, movie.getTitle());
+                statement.setString(2, movie.getYear());
+                statement.setString(3, movie.getCountry());
+                statement.setString(4, movie.getDirector());
+                statement.setString(5, movie.getActors());
+                statement.setString(6, movie.getGenre());
+                statement.setString(7, movie.getScreenwriter());
+                statement.addBatch();
+                for (Description description : movie.getDescription()) {
+                    statementForDescription.setString(1, movie.getTitle());
+                    statementForDescription.setString(2,
+                            String.valueOf(description.getDescriptionType().ordinal()));
+                    statementForDescription.setString(3, description.getDescriptionName());
+                    statementForDescription.addBatch();
+                }
+                for (Rating rating : movie.getRating()) {
+                    statementForRating.setString(1, movie.getTitle());
+                    statementForRating.setString(2,
+                            String.valueOf(rating.getRatingType().ordinal()));
+                    statementForRating.setString(3, rating.getRatingName());
+                    statementForRating.addBatch();
+                }
+                for (Metadata metadata : movie.getMetadata()) {
+                    statementForMetadata.setString(1, movie.getTitle());
+                    statementForMetadata.setString(2,
+                            String.valueOf(metadata.getMetadataType().ordinal()));
+                    statementForMetadata.setString(3, metadata.getMetadataName());
+                    statementForMetadata.addBatch();
+                }
+            }
+            statement.executeBatch();
+            statementForDescription.executeBatch();
+            statementForMetadata.executeBatch();
+            statementForRating.executeBatch();
+            connection.commit();
+        }
     }
 }
